@@ -1,0 +1,13 @@
+CREATE TABLE [download_list] (
+  [_id] INTEGER PRIMARY KEY AUTOINCREMENT, 
+  [name] TEXT,
+  [url] TEXT,
+  [ETag] TEXT,
+  [file_path] TEXT, 
+  [length] INTEGER, 
+  [complate_len] INTEGER, 
+  [curr_state] INTEGER);
+CREATE TABLE [profile] (
+  [_id] INTEGER PRIMARY KEY AUTOINCREMENT, 
+  [_key] TEXT, 
+  [_value] TEXT);

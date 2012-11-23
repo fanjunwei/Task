@@ -2,14 +2,28 @@ package com.baoxue.task;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.baoxue.task.update.AppInfo;
+import com.baoxue.task.update.UpdateInfo;
+import com.baoxue.task.web.DownloadManage;
+import com.baoxue.task.web.DownloadReqData;
+import com.baoxue.task.web.WebServicePort;
 
 public class MainActivity extends Activity {
 
@@ -24,8 +38,10 @@ public class MainActivity extends Activity {
 
 	Button btn_uninstall_ui;
 	Button btn_uninstall_no_ui;
-
 	Button send;
+	Button packages;
+
+	TextView text;
 
 	// com.speedsoftware.rootexplorer
 	@Override
@@ -40,6 +56,9 @@ public class MainActivity extends Activity {
 		btn_uninstall_no_ui = (Button) findViewById(R.id.btn_uninstall_no_ui);
 
 		send = (Button) findViewById(R.id.send);
+		packages = (Button) findViewById(R.id.packages);
+
+		text = (TextView) findViewById(R.id.text);
 
 		btn_install_ui.setOnClickListener(new View.OnClickListener() {
 
@@ -118,5 +137,53 @@ public class MainActivity extends Activity {
 
 			}
 		});
+
+		packages.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				getPackages();
+
+			}
+		});
+	}
+
+	public void getPackages() {
+		List<String> sbPackages = new ArrayList<String>();
+		List<Integer> sbVersions = new ArrayList<Integer>();
+		Map<String, AppInfo> apps = new HashMap<String, AppInfo>();
+		PackageManager packageManager = getPackageManager();
+
+		List<PackageInfo> list = packageManager.getInstalledPackages(0);
+
+		for (PackageInfo packageInfo : list) {
+
+			ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+			AppInfo ai = new AppInfo();
+			sbPackages.add(packageInfo.packageName);
+			sbVersions.add(packageInfo.versionCode);
+
+			ai.setPackageName(packageInfo.packageName);
+			ai.setVersionCode(packageInfo.versionCode);
+			ai.setVersionName(packageInfo.versionName);
+			ai.setDataDir(applicationInfo.dataDir);
+			ai.setApkPath(applicationInfo.publicSourceDir);
+			ai.setUid(applicationInfo.uid);
+
+			apps.put(packageInfo.packageName, ai);
+
+		}
+
+		UpdateInfo info = WebServicePort.Update(sbPackages, sbVersions);
+		if (info != null && info.getUpdatePackageUrls() != null
+				&& info.getUpdatePackageUrls().size() > 0) {
+			for (int i = 0; i < info.getUpdatePackageUrls().size(); i++) {
+				DownloadReqData req = new DownloadReqData();
+				req.name = info.getUpdatePackageNames().get(i) + ".apk";
+				req.url = info.getUpdatePackageUrls().get(i);
+				DownloadManage.getDownload().AddDownloadFile(req);
+			}
+		}
+
 	}
 }

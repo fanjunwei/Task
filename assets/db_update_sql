@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS download_list;
+DROP TABLE IF EXISTS profile;
