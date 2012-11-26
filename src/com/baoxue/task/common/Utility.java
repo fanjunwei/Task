@@ -1,8 +1,14 @@
 package com.baoxue.task.common;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.LocalSocket;
+import android.net.LocalSocketAddress;
 
 import com.baoxue.task.CrashApplication;
 
@@ -33,7 +39,7 @@ public class Utility {
 		java.text.NumberFormat formater = java.text.DecimalFormat.getInstance();
 		formater.setMaximumFractionDigits(2);
 		formater.setMinimumFractionDigits(0);
-		
+
 		if (length > 1024 * 1024) {
 			float value = ((float) length) / (1024 * 1024);
 			return formater.format(value) + "MB";
@@ -45,7 +51,7 @@ public class Utility {
 		}
 	}
 
-	//private static Activity lastRootActivity = null;
+	// private static Activity lastRootActivity = null;
 
 	public static int getVersionCode() {
 		Context mContext = CrashApplication.getCurrent();
@@ -87,5 +93,78 @@ public class Utility {
 	public static int px2dip(Context context, float pxValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		return (int) (pxValue / scale + 0.5f);
+	}
+
+	public static int readHttp(InputStream input, byte[] buffer, int offset,
+			int length) {
+		int readlen = 0;
+		int total = 0;
+		if (length > 0) {
+			try {
+				while ((readlen = input.read(buffer, offset, length)) > 0
+						&& length > 0) {
+					length -= readlen;
+					offset += readlen;
+					total += readlen;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return total;
+	}
+
+	public static byte[] readBlock(InputStream input) {
+		byte[] lenByte = new byte[4];
+		byte[] buffer = null;
+		int bytes = 0;
+
+		readHttp(input, lenByte, 0, 4);
+		bytes = Utility.FourBytesToInt(lenByte);
+		if (bytes > 0) {
+			buffer = new byte[bytes];
+			readHttp(input, buffer, 0, bytes);
+		}
+		return buffer;
+
+	}
+
+	public static String runCommand(String cmd) {
+
+		LocalSocket s = null;
+		LocalSocketAddress l;
+		s = new LocalSocket();
+		l = new LocalSocketAddress("task",
+				LocalSocketAddress.Namespace.RESERVED);
+		byte[] lineBuffer = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			s.connect(l);
+			OutputStream out = s.getOutputStream();
+
+			byte[] b = cmd.getBytes();
+			out.write((int) b.length);
+			out.write(b);
+			byte[] end = new byte[] { (byte) 0xff };
+
+			out.write(end);
+
+			InputStream input = s.getInputStream();
+
+			while ((lineBuffer = readBlock(input)) != null) {
+				sb.append(new String(lineBuffer, "utf-8"));
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (s != null)
+					s.close();
+			} catch (IOException e) {
+			}
+		}
+		return sb.toString();
 	}
 }

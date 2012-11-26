@@ -1,7 +1,5 @@
 package com.baoxue.task;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,13 +10,13 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.LocalSocket;
-import android.net.LocalSocketAddress;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baoxue.task.common.Utility;
 import com.baoxue.task.update.AppInfo;
 import com.baoxue.task.update.UpdateInfo;
 import com.baoxue.task.web.DownloadManage;
@@ -48,7 +46,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		// testSocket();
+		String res = Utility.runCommand("ps");
+		Log.d("tttt", res);
 		btn_install_ui = (Button) findViewById(R.id.btn_install_ui);
 		btn_install_no_ui = (Button) findViewById(R.id.btn_install_no_ui);
 
@@ -111,30 +111,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				LocalSocket s = null;
-				LocalSocketAddress l;
-				s = new LocalSocket();
-				l = new LocalSocketAddress("task",
-						LocalSocketAddress.Namespace.RESERVED);
-				try {
-					s.connect(l);
-					OutputStream out = s.getOutputStream();
-					String str = "my data";
-					byte[] b = str.getBytes();
-					out.write((int) b.length);
-					out.write(b);
-					out.close();
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						if (s != null)
-							s.close();
-					} catch (IOException e) {
-					}
-				}
-
+				// testSocket();
 			}
 		});
 
@@ -186,4 +163,5 @@ public class MainActivity extends Activity {
 		}
 
 	}
+
 }
