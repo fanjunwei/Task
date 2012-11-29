@@ -14,9 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -35,12 +32,13 @@ import com.baoxue.task.common.Utility;
 public class WebService {
 	private static WebService instance = null;
 	private static String TAG = "WebService";
-	private static final String defaultActionName = "task";
-	public static String _baseUrl = "http://10.0.2.2:8080";// "http://www.baoxuetech.com";
+//	public static String _baseUrl = "http://www.baoxuetech.com";
+//	private static final String _serviceURL = _baseUrl
+//			+ "/android/device_service";
+	
+	public static String _baseUrl = "http://10.0.2.2:8080";
 	private static final String _serviceURL = _baseUrl
 			+ "/baoxue/device_service";
-	private static final String defaultAction = _serviceURL + "/"
-			+ defaultActionName;
 
 	public static String getBaseUrl() {
 		return _baseUrl;
@@ -79,12 +77,11 @@ public class WebService {
 		waitNetworkToConnected();
 		try {
 			String url = _serviceURL + "/" + actionName + ".action?version="
-					+ Utility.getVersionCode();
+					+ Utility.getVersionCode() + "&deviceVersion="
+					+ "F5_BXT_01" + "&deviceId=" + Utility.getDeviceId();
+			// SystemProperties
+			// .get("ro.custom.build.version", "unknown");
 			if (parm != null) {
-				// body = "json="
-				// + java.net.URLEncoder.encode(new JSONObject(parm)
-				// .toString());
-
 				body = JSONHelper.toJSON(parm);
 			}
 			URL u = new URL(url);
@@ -158,7 +155,7 @@ public class WebService {
 		}
 		return null;
 	}
-	
+
 	public static void readHttpData(InputStream input, byte[] data, int off,
 			int length) {
 		int readlength = 0;

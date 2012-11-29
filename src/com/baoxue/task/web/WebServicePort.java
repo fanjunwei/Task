@@ -25,4 +25,13 @@ public class WebServicePort {
 
 	}
 
+	public static ResTaskItem[] Task() {
+
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		String res = WebService.getInstance()
+				.CallFuncJson("task", parameters);
+		ResTaskItem[] taskItems = JSONHelper.parseArray(res, ResTaskItem.class);
+		return taskItems;
+
+	}
 }

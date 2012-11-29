@@ -3,6 +3,7 @@ package com.baoxue.task.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -11,6 +12,8 @@ import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 
 import com.baoxue.task.CrashApplication;
+import com.baoxue.task.db.Profile;
+import com.baoxue.task.store.storeHelper;
 
 public class Utility {
 	public static int FourBytesToInt(byte Bytes[]) {
@@ -155,6 +158,8 @@ public class Utility {
 			while ((lineBuffer = readBlock(input)) != null) {
 				sb.append(new String(lineBuffer, "utf-8"));
 			}
+			input.close();
+			out.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -166,5 +171,14 @@ public class Utility {
 			}
 		}
 		return sb.toString();
+	}
+
+	public static String getDeviceId() {
+		String id = Profile.getProfile().getValue("deviceID");
+		if (id == null) {
+			id = UUID.randomUUID().toString();
+			Profile.getProfile().setValue("deviceID", id);
+		}
+		return id;
 	}
 }

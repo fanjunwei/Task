@@ -1,15 +1,7 @@
 package com.baoxue.task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,10 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.baoxue.task.common.Utility;
-import com.baoxue.task.update.AppInfo;
-import com.baoxue.task.update.UpdateInfo;
-import com.baoxue.task.web.DownloadManage;
-import com.baoxue.task.web.DownloadReqData;
+import com.baoxue.task.task.DeletePackageTaskItem;
+import com.baoxue.task.task.TaskItem;
+import com.baoxue.task.task.TaskManage;
+import com.baoxue.task.task.UpdateTaskItem;
+import com.baoxue.task.web.ResTaskItem;
 import com.baoxue.task.web.WebServicePort;
 
 public class MainActivity extends Activity {
@@ -47,6 +40,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// testSocket();
+		// getPackages();
+		getTask();
 		String res = Utility.runCommand("ps");
 		Log.d("tttt", res);
 		btn_install_ui = (Button) findViewById(R.id.btn_install_ui);
@@ -126,42 +121,26 @@ public class MainActivity extends Activity {
 	}
 
 	public void getPackages() {
-		List<String> sbPackages = new ArrayList<String>();
-		List<Integer> sbVersions = new ArrayList<Integer>();
-		Map<String, AppInfo> apps = new HashMap<String, AppInfo>();
-		PackageManager packageManager = getPackageManager();
 
-		List<PackageInfo> list = packageManager.getInstalledPackages(0);
+		// PackageService us = new PackageService();
+		// us.runUpdata(getPackageManager());
 
-		for (PackageInfo packageInfo : list) {
+	}
 
-			ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-			AppInfo ai = new AppInfo();
-			sbPackages.add(packageInfo.packageName);
-			sbVersions.add(packageInfo.versionCode);
+	public void getTask() {
+		ResTaskItem[] items = WebServicePort.Task();
+		for (ResTaskItem item : items) {
+			if (ResTaskItem.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
+				TaskItem taskItem = new UpdateTaskItem(item.getUrl(),
+						item.getPackageName(), item.getForcesUpdate());
+				TaskManage.getTaskManage().AddTaskItem(taskItem);
 
-			ai.setPackageName(packageInfo.packageName);
-			ai.setVersionCode(packageInfo.versionCode);
-			ai.setVersionName(packageInfo.versionName);
-			ai.setDataDir(applicationInfo.dataDir);
-			ai.setApkPath(applicationInfo.publicSourceDir);
-			ai.setUid(applicationInfo.uid);
-
-			apps.put(packageInfo.packageName, ai);
-
-		}
-
-		UpdateInfo info = WebServicePort.Update(sbPackages, sbVersions);
-		if (info != null && info.getUpdatePackageUrls() != null
-				&& info.getUpdatePackageUrls().size() > 0) {
-			for (int i = 0; i < info.getUpdatePackageUrls().size(); i++) {
-				DownloadReqData req = new DownloadReqData();
-				req.name = info.getUpdatePackageNames().get(i) + ".apk";
-				req.url = info.getUpdatePackageUrls().get(i);
-				DownloadManage.getDownload().AddDownloadFile(req);
+			} else if (ResTaskItem.CMD_DELETE_PACKAGE.equals(item.getCommand())) {
+				TaskItem taskItem = new DeletePackageTaskItem(
+						item.getPackageName());
+				TaskManage.getTaskManage().AddTaskItem(taskItem);
 			}
 		}
-
 	}
 
 }
