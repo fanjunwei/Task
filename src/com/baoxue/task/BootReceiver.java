@@ -12,7 +12,7 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.d("Task", "boot");
-		Utility.setAlarm(context, 10000);
+		Utility.setAlarm(context, 60 * 1000);
 	}
 
 }

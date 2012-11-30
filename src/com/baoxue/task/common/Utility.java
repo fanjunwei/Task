@@ -193,8 +193,8 @@ public class Utility {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 
-		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(),
-				intervalMillis, pi);
+		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()
+				+ intervalMillis, intervalMillis, pi);
 
 	}
 }

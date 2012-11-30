@@ -32,7 +32,7 @@ import com.baoxue.task.common.Utility;
 public class WebService {
 	private static WebService instance = null;
 	private static String TAG = "WebService";
-	public static String _baseUrl = "http://www.baoxuetech.com";
+	public static String _baseUrl = "http://task.nuuli.com";
 	private static final String _serviceURL = _baseUrl
 			+ "/android/device_service";
 

@@ -34,12 +34,16 @@ public class WebServicePort {
 
 	public static ResTask DoTask(String taskId) {
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("taskId", taskId);
-		String res = WebService.getInstance().CallFuncJson("do_task",
-				parameters);
-		ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
-		return taskItems;
+		if (taskId != null && !"".equals(taskId)) {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("taskId", taskId);
+			String res = WebService.getInstance().CallFuncJson("do_task",
+					parameters);
+			ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
+			return taskItems;
+		} else {
+			return null;
+		}
 
 	}
 }

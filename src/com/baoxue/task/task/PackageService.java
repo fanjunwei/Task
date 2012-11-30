@@ -12,10 +12,13 @@ import com.baoxue.task.update.AppInfo;
 
 public class PackageService {
 
-	private static Map<String, AppInfo> apps = new HashMap<String, AppInfo>();
+	private static Map<String, AppInfo> apps = null;
 
-	public static Map<String, AppInfo> getPackage(PackageManager packageManager) {
+	public synchronized static Map<String, AppInfo> getPackage(
+			PackageManager packageManager) {
+
 		if (apps == null) {
+			apps = new HashMap<String, AppInfo>();
 			List<PackageInfo> appInfoList = packageManager
 					.getInstalledPackages(0);
 			for (PackageInfo packageInfo : appInfoList) {
@@ -35,7 +38,7 @@ public class PackageService {
 		return apps;
 	}
 
-	public static void reset() {
+	public synchronized static void reset() {
 		apps = null;
 	}
 
