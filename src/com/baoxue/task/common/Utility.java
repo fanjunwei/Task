@@ -5,15 +5,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 
 import com.baoxue.task.CrashApplication;
+import com.baoxue.task.Receiver;
 import com.baoxue.task.db.Profile;
-import com.baoxue.task.store.storeHelper;
 
 public class Utility {
 	public static int FourBytesToInt(byte Bytes[]) {
@@ -180,5 +183,18 @@ public class Utility {
 			Profile.getProfile().setValue("deviceID", id);
 		}
 		return id;
+	}
+
+	public static void setAlarm(Context context, long intervalMillis) {
+
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(
+				context, Receiver.class), 0);
+
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+
+		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(),
+				intervalMillis, pi);
+
 	}
 }

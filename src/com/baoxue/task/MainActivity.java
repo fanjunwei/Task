@@ -11,12 +11,14 @@ import android.widget.TextView;
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.task.DeletePackageTaskItem;
 import com.baoxue.task.task.TaskItem;
+import com.baoxue.task.task.TaskListerner;
 import com.baoxue.task.task.TaskManage;
 import com.baoxue.task.task.UpdateTaskItem;
+import com.baoxue.task.web.ResTask;
 import com.baoxue.task.web.ResTaskItem;
 import com.baoxue.task.web.WebServicePort;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements TaskListerner {
 
 	private final static String ACTION_INSTALL = "baoxue.action.INSTALL_PACKAGES";
 	private final static String ACTION_DELETE = "baoxue.action.DELETE_PACKAGES";
@@ -34,6 +36,8 @@ public class MainActivity extends Activity {
 
 	TextView text;
 
+	ResTask task;
+
 	// com.speedsoftware.rootexplorer
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,7 @@ public class MainActivity extends Activity {
 		// testSocket();
 		// getPackages();
 		getTask();
-		String res = Utility.runCommand("ps");
-		Log.d("tttt", res);
+		//String res = Utility.runCommand("ps");
 		btn_install_ui = (Button) findViewById(R.id.btn_install_ui);
 		btn_install_no_ui = (Button) findViewById(R.id.btn_install_no_ui);
 
@@ -128,18 +131,31 @@ public class MainActivity extends Activity {
 	}
 
 	public void getTask() {
-		ResTaskItem[] items = WebServicePort.Task();
-		for (ResTaskItem item : items) {
-			if (ResTaskItem.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
-				TaskItem taskItem = new UpdateTaskItem(item.getUrl(),
-						item.getPackageName(), item.getForcesUpdate());
-				TaskManage.getTaskManage().AddTaskItem(taskItem);
+		task = WebServicePort.Task();
+		if (task != null) {
+			ResTaskItem[] items = task.getItems();
+			for (ResTaskItem item : items) {
+				if (ResTaskItem.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
+					TaskItem taskItem = new UpdateTaskItem(item.getUrl(),
+							item.getPackageName(), item.getForcesUpdate());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
 
-			} else if (ResTaskItem.CMD_DELETE_PACKAGE.equals(item.getCommand())) {
-				TaskItem taskItem = new DeletePackageTaskItem(
-						item.getPackageName());
-				TaskManage.getTaskManage().AddTaskItem(taskItem);
+				} else if (ResTaskItem.CMD_DELETE_PACKAGE.equals(item
+						.getCommand())) {
+					TaskItem taskItem = new DeletePackageTaskItem(
+							item.getPackageName());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
+				}
 			}
+			TaskManage.getTaskManage().beginTask();
+			TaskManage.getTaskManage().setListener(this);
+		}
+	}
+
+	@Override
+	public void Complate() {
+		if (task != null) {
+			WebServicePort.DoTask(task.getId());
 		}
 	}
 

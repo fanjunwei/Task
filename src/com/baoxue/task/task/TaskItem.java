@@ -12,7 +12,7 @@ public abstract class TaskItem extends LinkedItem {
 	public final static int STATE_ERROR = -1;
 
 	private int state = STATE_NONE;
-	private TaskListener listener;
+	private TaskItemListener listener;
 
 	public int getState() {
 		return state;
@@ -35,11 +35,11 @@ public abstract class TaskItem extends LinkedItem {
 		}
 	}
 
-	public TaskListener getListener() {
+	public TaskItemListener getListener() {
 		return listener;
 	}
 
-	public void setListener(TaskListener listener) {
+	public void setListener(TaskItemListener listener) {
 		this.listener = listener;
 	}
 

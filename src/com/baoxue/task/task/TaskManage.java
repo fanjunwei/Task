@@ -3,6 +3,7 @@ package com.baoxue.task.task;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
@@ -17,12 +18,22 @@ public class TaskManage {
 	private boolean cancelAllTaskFlag = false;
 	LinkedItem taskDoingListHeader = new TaskItemHeader();
 	Queue<TaskItem> taskQueue = new LinkedList<TaskItem>();
+	Queue<Intent> broadcast = new LinkedList<Intent>();
 	SparseArray<TaskItem> datamap = new SparseArray<TaskItem>();
 	int downloadCount = 0;
 	final static int MAX_DOWNLOAD_COONT = 3;
 	Thread taskThread = null;
 	private boolean hasRunCheck = false;
 	boolean has_init_history = false;
+	TaskListerner listener;
+
+	public TaskListerner getListener() {
+		return listener;
+	}
+
+	public void setListener(TaskListerner listener) {
+		this.listener = listener;
+	}
 
 	private TaskManage() {
 
@@ -57,14 +68,23 @@ public class TaskManage {
 		return instance;
 	}
 
-	public synchronized int AddTaskItem(TaskItem taskItem) {
-		if (datamap.get(taskItem.getId()) != null) {
-			return 1;
+	public synchronized int addTaskItem(TaskItem taskItem) {
+		if (taskThread == null) {
+			if (datamap.get(taskItem.getId()) != null) {
+				return 1;
+			} else {
+				taskQueue.add(taskItem);
+				datamap.put(taskItem.getId(), taskItem);
+				return 0;
+			}
 		} else {
-			taskQueue.add(taskItem);
-			datamap.put(taskItem.getId(), taskItem);
-			beginTask();
-			return 0;
+			return -1;
+		}
+	}
+
+	public synchronized void addBroadcast(Intent intent) {
+		if (taskDoingListHeader.getNext() != null) {
+			broadcast.add(intent);
 		}
 	}
 
@@ -104,6 +124,15 @@ public class TaskManage {
 				}
 
 			}
+			while (broadcast.size() > 0) {
+				Intent i = broadcast.remove();
+				for (TaskItem item = (TaskItem) taskDoingListHeader.getNext(); item != null; item = (TaskItem) item
+						.getNext()) {
+					if (item instanceof PackageItem) {
+						((PackageItem) item).PackageChange(i);
+					}
+				}
+			}
 			if (taskDoingListHeader.getNext() != null
 					&& ((TaskItem) taskDoingListHeader.getNext()).getState() == TaskItem.STATE_READY) {
 				TaskItem item = (TaskItem) taskDoingListHeader.getNext();
@@ -127,32 +156,38 @@ public class TaskManage {
 			cancelAllTaskFlag = false;
 			hasRunCheck = false;
 		}
+
 	}
 
 	public void beginTask() {
-		if (taskThread == null) {
-			taskThread = new Thread(new Runnable() {
+		if (taskQueue.size() > 0) {
+			if (taskThread == null) {
+				taskThread = new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					try {
-						while (taskDoingListHeader.getNext() != null
-								|| taskQueue.size() > 0) {
-							if (!hasRunCheck) {
-								loop();
+					@Override
+					public void run() {
+						try {
+							while (taskDoingListHeader.getNext() != null
+									|| taskQueue.size() > 0) {
+								if (!hasRunCheck) {
+									loop();
+								}
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
 							}
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
+							if (listener != null) {
+								listener.Complate();
 							}
+						} finally {
+							taskThread = null;
 						}
-					} finally {
-						taskThread = null;
 					}
-				}
-			});
-			taskThread.start();
+				});
+				taskThread.start();
+			}
 		}
 	}
 

@@ -2,11 +2,13 @@ package com.baoxue.task.task;
 
 import java.util.Map;
 
+import android.content.Intent;
+
 import com.baoxue.task.CrashApplication;
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.update.AppInfo;
 
-public class DeletePackageTaskItem extends TaskItem {
+public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 
 	String packageName;
 
@@ -32,7 +34,6 @@ public class DeletePackageTaskItem extends TaskItem {
 		cmd = String.format("rm -r %s", dataPath);
 		Utility.runCommand(cmd);
 		PackageService.reset();
-		setState(TaskItem.STATE_COMPLATE);
 	}
 
 	@Override
@@ -49,6 +50,19 @@ public class DeletePackageTaskItem extends TaskItem {
 	public int getId() {
 		String str = "delete" + packageName;
 		return str.hashCode();
+	}
+
+	@Override
+	public void PackageChange(Intent intent) {
+		if (getState() == TaskItem.STATE_RUNNING) {
+			if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
+				String addedPackageName = intent.getData()
+						.getSchemeSpecificPart();
+				if (packageName.equals(addedPackageName)) {
+					setState(TaskItem.STATE_COMPLATE);
+				}
+			}
+		}
 	}
 
 }

@@ -20,17 +20,25 @@ public class WebServicePort {
 		String res = WebService.getInstance()
 				.CallFuncJson("updata", parameters);
 		UpdateInfo updateinfo = JSONHelper.parseObject(res, UpdateInfo.class);
-		Log.d("tttt", updateinfo.getUpdatePackageNames().size() + "");
 		return updateinfo;
 
 	}
 
-	public static ResTaskItem[] Task() {
+	public static ResTask Task() {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		String res = WebService.getInstance().CallFuncJson("task", parameters);
+		ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
+		return taskItems;
+
+	}
+
+	public static ResTask DoTask(String taskId) {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		String res = WebService.getInstance()
-				.CallFuncJson("task", parameters);
-		ResTaskItem[] taskItems = JSONHelper.parseArray(res, ResTaskItem.class);
+		parameters.put("taskId", taskId);
+		String res = WebService.getInstance().CallFuncJson("do_task",
+				parameters);
+		ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
 		return taskItems;
 
 	}

@@ -35,7 +35,6 @@ public class JSONHelper {
 	public static String toJSON(Object obj) {
 		JSONStringer js = new JSONStringer();
 		serialize(js, obj);
-		Log.d(TAG, "JSONHelper toJSON :" + js.toString());
 		return js.toString();
 	}
 
@@ -557,9 +556,6 @@ public class JSONHelper {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		if (obj == null) {
-			Log.d("tttt", "null");
 		}
 		return obj;
 	}
