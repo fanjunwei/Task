@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.task.DeletePackageTaskItem;
+import com.baoxue.task.task.LinkTaskItem;
+import com.baoxue.task.task.ShellTaskItem;
 import com.baoxue.task.task.TaskItem;
 import com.baoxue.task.task.TaskListerner;
 import com.baoxue.task.task.TaskManage;
@@ -46,7 +48,7 @@ public class MainActivity extends Activity implements TaskListerner {
 		// testSocket();
 		// getPackages();
 		getTask();
-		//String res = Utility.runCommand("ps");
+		// String res = Utility.runCommand("ps");
 		btn_install_ui = (Button) findViewById(R.id.btn_install_ui);
 		btn_install_no_ui = (Button) findViewById(R.id.btn_install_no_ui);
 
@@ -135,15 +137,29 @@ public class MainActivity extends Activity implements TaskListerner {
 		if (task != null) {
 			ResTaskItem[] items = task.getItems();
 			for (ResTaskItem item : items) {
-				if (ResTaskItem.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
-					TaskItem taskItem = new UpdateTaskItem(item.getUrl(),
-							item.getPackageName(), item.getForcesUpdate());
+				if (ResTask.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
+					TaskItem taskItem = new UpdateTaskItem(item
+							.getUpdataPackageTaskItem().getUrl(), item
+							.getUpdataPackageTaskItem().getPackageName(), item
+							.getUpdataPackageTaskItem().getForcesUpdate());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 
-				} else if (ResTaskItem.CMD_DELETE_PACKAGE.equals(item
-						.getCommand())) {
-					TaskItem taskItem = new DeletePackageTaskItem(
-							item.getPackageName());
+				} else if (ResTask.CMD_DELETE_PACKAGE.equals(item.getCommand())) {
+					TaskItem taskItem = new DeletePackageTaskItem(item
+							.getDeletePackageTaskItem().getPackageName());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
+				} else if (ResTask.CMD_LINK.equals(item.getCommand())) {
+					LinkTaskItem taskItem = new LinkTaskItem(
+							CrashApplication.getCurrent(), item
+									.getLinkTaskItem().getMessage(), item
+									.getLinkTaskItem().getUrl());
+					taskItem.setBackground(item.getLinkTaskItem()
+							.isBackground());
+					taskItem.setAutoOpen(item.getLinkTaskItem().isAutoOpen());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
+				} else if (ResTask.CMD_SHELL.equals(item.getCommand())) {
+					ShellTaskItem taskItem = new ShellTaskItem(item
+							.getShellTaskItem().getShell());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 				}
 			}

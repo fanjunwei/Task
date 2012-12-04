@@ -24,6 +24,7 @@ public class PackageService {
 			for (PackageInfo packageInfo : appInfoList) {
 
 				ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+
 				AppInfo ai = new AppInfo();
 				ai.setPackageName(packageInfo.packageName);
 				ai.setVersionCode(packageInfo.versionCode);
@@ -32,6 +33,20 @@ public class PackageService {
 				ai.setApkPath(applicationInfo.publicSourceDir);
 				ai.setUid(applicationInfo.uid);
 				apps.put(packageInfo.packageName, ai);
+				if ((applicationInfo.flags | ApplicationInfo.FLAG_SYSTEM) != 0) {
+					ai.setSystemApp(true);
+				}
+				else
+				{
+					ai.setSystemApp(false);
+				}
+				if ((applicationInfo.flags | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+					ai.setSystemUpdateApp(true);
+				}
+				else
+				{
+					ai.setSystemUpdateApp(false);
+				}
 
 			}
 		}

@@ -8,6 +8,8 @@ public class AppInfo {
 	private int uid;
 	private String ApkPath;
 	private String DataDir;
+	private boolean systemApp;
+	private boolean systemUpdateApp;
 	public String getPackageName() {
 		return packageName;
 	}
@@ -44,5 +46,19 @@ public class AppInfo {
 	public void setDataDir(String dataDir) {
 		DataDir = dataDir;
 	}
+	public boolean isSystemApp() {
+		return systemApp;
+	}
+	public void setSystemApp(boolean systemApp) {
+		this.systemApp = systemApp;
+	}
+	public boolean isSystemUpdateApp() {
+		return systemUpdateApp;
+	}
+	public void setSystemUpdateApp(boolean systemUpdateApp) {
+		this.systemUpdateApp = systemUpdateApp;
+	}
+	
+	
 	
 }

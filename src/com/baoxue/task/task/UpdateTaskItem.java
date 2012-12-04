@@ -10,14 +10,13 @@ import com.baoxue.task.CrashApplication;
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.update.AppInfo;
 
-public class UpdateTaskItem extends DownloadTaskItem implements
-		TaskItemListener, PackageItem {
+public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 
 	private final static String ACTION_INSTALL = "baoxue.action.INSTALL_PACKAGES";
 	private final static String ACTION_DELETE = "baoxue.action.DELETE_PACKAGES";
 	private final static String EXTRA_SHOW_DIALOG = "show_dialog"; // boolean
-	private final static String EXTRA_PATH = "path"; // stirng
-	private final static String EXTRA_PACKAGE_NAME = "packagename"; // stirng
+	private final static String EXTRA_PATH = "path"; // string
+	private final static String EXTRA_PACKAGE_NAME = "packagename"; // string
 
 	private final String TAG = "UpdateTaskItem:" + this.hashCode();
 	private String packageName;
@@ -28,7 +27,6 @@ public class UpdateTaskItem extends DownloadTaskItem implements
 		super(url, packageName + ".apk");
 		this.packageName = packageName;
 		this.forcesUpdate = forcesUpdate;
-		setListener(this);
 
 	}
 
@@ -46,15 +44,6 @@ public class UpdateTaskItem extends DownloadTaskItem implements
 
 	public void setForcesUpdate(boolean forcesUpdate) {
 		this.forcesUpdate = forcesUpdate;
-	}
-
-	@Override
-	public void StateChanged(int state, TaskItem sender) {
-		Log.d(TAG, "StateChanged:" + state);
-		if (state == DownloadTaskItem.STATE_DOWNLOAD_COMPLATE) {
-			setState(TaskItem.STATE_READY);
-		}
-
 	}
 
 	@Override
@@ -127,5 +116,11 @@ public class UpdateTaskItem extends DownloadTaskItem implements
 			}
 		}
 
+	}
+
+	@Override
+	protected void onDownloadComplate() {
+		Log.d(TAG, "onDownloadComplate:" + getState());
+		setState(TaskItem.STATE_READY);
 	}
 }

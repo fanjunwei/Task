@@ -32,11 +32,11 @@ import com.baoxue.task.common.Utility;
 public class WebService {
 	private static WebService instance = null;
 	private static String TAG = "WebService";
-	public static String _baseUrl = "http://task.nuuli.com";
+	public static final String _baseUrl = "http://task.nuuli.com";
 	private static final String _serviceURL = _baseUrl
 			+ "/android/device_service";
 
-	// public static String _baseUrl = "http://10.0.2.2:8080";
+	// public static final String _baseUrl = "http://10.0.2.2:8080";
 	// private static final String _serviceURL = _baseUrl
 	// + "/baoxue/device_service";
 
@@ -89,7 +89,7 @@ public class WebService {
 			try {
 				conn = (HttpURLConnection) u.openConnection();
 			} catch (UnknownHostException ex) {
-				conn = (HttpURLConnection) u.openConnection();
+				Log.e(TAG, "UnknownHostException");
 			}
 			conn.setDoOutput(true);
 			conn.setConnectTimeout(20000);

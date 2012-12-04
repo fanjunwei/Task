@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.baoxue.task.common.JSONHelper;
 import com.baoxue.task.update.UpdateInfo;
 

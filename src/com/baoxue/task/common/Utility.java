@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
+import android.net.Uri;
 
 import com.baoxue.task.CrashApplication;
 import com.baoxue.task.Receiver;
@@ -196,5 +197,12 @@ public class Utility {
 		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()
 				+ intervalMillis, intervalMillis, pi);
 
+	}
+	public static void openUrl(String url) {
+		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.setData(Uri.parse(url));
+		CrashApplication.getCurrent().startActivity(intent);
 	}
 }

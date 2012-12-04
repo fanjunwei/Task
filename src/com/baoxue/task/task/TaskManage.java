@@ -102,11 +102,9 @@ public class TaskManage {
 				}
 				switch (item.getState()) {
 
+				case TaskItem.STATE_ERROR:
 				case TaskItem.STATE_COMPLATE:
-					item.remove();
-
-					break;
-				case DownloadTaskItem.STATE_CANCEL:
+				case TaskItem.STATE_CANCEL:
 					datamap.remove(item.getId());
 					item.remove();
 					break;

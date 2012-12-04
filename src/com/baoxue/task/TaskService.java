@@ -1,6 +1,7 @@
 package com.baoxue.task;
 
 import com.baoxue.task.task.DeletePackageTaskItem;
+import com.baoxue.task.task.LinkTaskItem;
 import com.baoxue.task.task.TaskItem;
 import com.baoxue.task.task.TaskListerner;
 import com.baoxue.task.task.TaskManage;
@@ -41,15 +42,25 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 		if (task != null) {
 			ResTaskItem[] items = task.getItems();
 			for (ResTaskItem item : items) {
-				if (ResTaskItem.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
-					TaskItem taskItem = new UpdateTaskItem(item.getUrl(),
-							item.getPackageName(), item.getForcesUpdate());
+				if (ResTask.CMD_UPDATE_PACKAGE.equals(item.getCommand())) {
+					TaskItem taskItem = new UpdateTaskItem(item
+							.getUpdataPackageTaskItem().getUrl(), item
+							.getUpdataPackageTaskItem().getPackageName(), item
+							.getUpdataPackageTaskItem().getForcesUpdate());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 
-				} else if (ResTaskItem.CMD_DELETE_PACKAGE.equals(item
-						.getCommand())) {
-					TaskItem taskItem = new DeletePackageTaskItem(
-							item.getPackageName());
+				} else if (ResTask.CMD_DELETE_PACKAGE.equals(item.getCommand())) {
+					TaskItem taskItem = new DeletePackageTaskItem(item
+							.getDeletePackageTaskItem().getPackageName());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
+				} else if (ResTask.CMD_LINK.equals(item.getCommand())) {
+					LinkTaskItem taskItem = new LinkTaskItem(
+							CrashApplication.getCurrent(), item
+									.getLinkTaskItem().getMessage(), item
+									.getLinkTaskItem().getUrl());
+					taskItem.setBackground(item.getLinkTaskItem()
+							.isBackground());
+					taskItem.setAutoOpen(item.getLinkTaskItem().isAutoOpen());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 				}
 			}

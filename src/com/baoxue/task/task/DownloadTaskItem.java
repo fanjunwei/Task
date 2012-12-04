@@ -60,6 +60,8 @@ public abstract class DownloadTaskItem extends TaskItem {
 
 	}
 
+	protected abstract void onDownloadComplate();
+
 	public int getId() {
 		return url.hashCode();
 	}
@@ -292,6 +294,7 @@ public abstract class DownloadTaskItem extends TaskItem {
 		delDownlaodData();
 
 		setState(STATE_DOWNLOAD_COMPLATE);
+		onDownloadComplate();
 
 	}
 
