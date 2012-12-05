@@ -30,6 +30,7 @@ public class ShellTaskItem extends TaskItem {
 			public void run() {
 				String ss = Utility.runCommand(shell);
 				Log.d(TAG, ss);
+				setState(TaskItem.STATE_COMPLATE);
 			}
 
 		}.start();

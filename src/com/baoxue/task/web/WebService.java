@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -69,6 +71,40 @@ public class WebService {
 		return instance;
 	}
 
+	private String getVersion() {
+		try {
+			Class c = Class.forName("android.os.SystemProperties");
+			if (c != null) {
+				Method m = c.getMethod("get", String.class, String.class);
+				if (m != null) {
+					Object res = m.invoke(c, "ro.custom.build.version",
+							"unknown");
+					if (res != null) {
+						return res.toString();
+					}
+				}
+			}
+		} catch (ClassNotFoundException e) {
+
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "unknow";
+	}
+
 	public String CallFuncJson(String actionName, Map<String, Object> parm) {
 		String body = "";
 		if (NetWorkEnable(CrashApplication.getCurrent()) == -1) {
@@ -78,7 +114,7 @@ public class WebService {
 		try {
 			String url = _serviceURL + "/" + actionName + ".action?version="
 					+ Utility.getVersionCode() + "&deviceVersion="
-					+ "F5_BXT_01" + "&deviceId=" + Utility.getDeviceId();
+					+ getVersion() + "&deviceId=" + Utility.getDeviceId();
 			// SystemProperties
 			// .get("ro.custom.build.version", "unknown");
 			if (parm != null) {

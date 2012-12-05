@@ -95,6 +95,7 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 		if (getState() == TaskItem.STATE_RUNNING) {
 			if ((System.currentTimeMillis() - time) > 60000) {
 				Log.d(TAG, "timeOut");
+				deleteFile();
 				setState(TaskItem.STATE_COMPLATE);
 			}
 		}
@@ -111,6 +112,7 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 				String addedPackageName = intent.getData()
 						.getSchemeSpecificPart();
 				if (packageName.equals(addedPackageName)) {
+					deleteFile();
 					setState(TaskItem.STATE_COMPLATE);
 				}
 			}
@@ -122,5 +124,10 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 	protected void onDownloadComplate() {
 		Log.d(TAG, "onDownloadComplate:" + getState());
 		setState(TaskItem.STATE_READY);
+	}
+
+	private void deleteFile() {
+		File f = new File(getFilePath());
+		f.deleteOnExit();
 	}
 }

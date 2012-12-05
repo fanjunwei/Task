@@ -2,6 +2,7 @@ package com.baoxue.task;
 
 import com.baoxue.task.task.DeletePackageTaskItem;
 import com.baoxue.task.task.LinkTaskItem;
+import com.baoxue.task.task.ShellTaskItem;
 import com.baoxue.task.task.TaskItem;
 import com.baoxue.task.task.TaskListerner;
 import com.baoxue.task.task.TaskManage;
@@ -34,7 +35,7 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 
 	@Override
 	public void run() {
-		getTask();
+		 getTask();
 	}
 
 	public void getTask() {
@@ -61,6 +62,10 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 					taskItem.setBackground(item.getLinkTaskItem()
 							.isBackground());
 					taskItem.setAutoOpen(item.getLinkTaskItem().isAutoOpen());
+					TaskManage.getTaskManage().addTaskItem(taskItem);
+				} else if (ResTask.CMD_SHELL.equals(item.getCommand())) {
+					ShellTaskItem taskItem = new ShellTaskItem(item
+							.getShellTaskItem().getShell());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 				}
 			}

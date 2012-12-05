@@ -22,6 +22,7 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 	private final String TAG = "DeletePackageTaskItem:" + this.hashCode();
 
 	public DeletePackageTaskItem(String packageName) {
+		this.packageName=packageName;
 
 	}
 
