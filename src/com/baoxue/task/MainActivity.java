@@ -1,12 +1,14 @@
 package com.baoxue.task;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.task.DeletePackageTaskItem;
 import com.baoxue.task.task.LinkTaskItem;
 import com.baoxue.task.task.ShellTaskItem;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity implements TaskListerner {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SaveApplication.setApp((Application) getApplicationContext());
 		setContentView(R.layout.activity_main);
 		// testSocket();
 		// getPackages();
@@ -149,7 +152,7 @@ public class MainActivity extends Activity implements TaskListerner {
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 				} else if (ResTask.CMD_LINK.equals(item.getCommand())) {
 					LinkTaskItem taskItem = new LinkTaskItem(
-							CrashApplication.getCurrent(), item
+							SaveApplication.getCurrent(), item
 									.getLinkTaskItem().getMessage(), item
 									.getLinkTaskItem().getUrl());
 					taskItem.setBackground(item.getLinkTaskItem()

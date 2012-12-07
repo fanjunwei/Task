@@ -6,7 +6,7 @@ import java.util.Map;
 import android.content.Intent;
 import android.util.Log;
 
-import com.baoxue.task.CrashApplication;
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.update.AppInfo;
 
@@ -36,12 +36,17 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 	@Override
 	public void init() {
 		Map<String, AppInfo> packages = PackageService
-				.getPackage(CrashApplication.getCurrent().getPackageManager());
+				.getPackage(SaveApplication.getCurrent().getPackageManager());
 		AppInfo info = packages.get(packageName);
 		if (info != null && info.getVersionCode() >= versionCode) {
 			setState(TaskItem.STATE_COMPLATE);
 			return;
 		} else {
+			if (SaveApplication.getCurrent().getPackageName()
+					.equals(packageName)) {
+				Log.d(TAG, "upate self");
+				forcesUpdate = true;
+			}
 			downloadProc();
 		}
 	}
@@ -76,7 +81,7 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 					if (forcesUpdate) {
 						String newPath = null;
 						Map<String, AppInfo> apps = PackageService
-								.getPackage(CrashApplication.getCurrent()
+								.getPackage(SaveApplication.getCurrent()
 										.getPackageManager());
 						AppInfo ai = apps.get(packageName);
 
@@ -99,7 +104,7 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 						i.putExtra(EXTRA_SHOW_DIALOG, false);
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						i.putExtra(EXTRA_PATH, getFilePath());
-						CrashApplication.getCurrent().sendBroadcast(i);
+						SaveApplication.getCurrent().sendBroadcast(i);
 					}
 
 				}

@@ -15,7 +15,6 @@ import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.net.Uri;
 
-import com.baoxue.task.CrashApplication;
 import com.baoxue.task.Receiver;
 import com.baoxue.task.db.Profile;
 
@@ -61,7 +60,7 @@ public class Utility {
 	// private static Activity lastRootActivity = null;
 
 	public static int getVersionCode() {
-		Context mContext = CrashApplication.getCurrent();
+		Context mContext = SaveApplication.getCurrent();
 		PackageInfo inf;
 		try {
 			inf = mContext.getPackageManager().getPackageInfo(
@@ -74,7 +73,7 @@ public class Utility {
 	}
 
 	public static String getVersionName() {
-		Context mContext = CrashApplication.getCurrent();
+		Context mContext = SaveApplication.getCurrent();
 		PackageInfo inf;
 		try {
 			inf = mContext.getPackageManager().getPackageInfo(
@@ -209,6 +208,6 @@ public class Utility {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.setAction(android.content.Intent.ACTION_VIEW);
 		intent.setData(Uri.parse(url));
-		CrashApplication.getCurrent().startActivity(intent);
+		SaveApplication.getCurrent().startActivity(intent);
 	}
 }

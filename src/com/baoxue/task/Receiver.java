@@ -12,7 +12,9 @@ public class Receiver extends BroadcastReceiver {
 		Log.d("Task", "getTask");
 		Intent i = new Intent();
 		i.setClass(context, TaskService.class);
+		
 		context.startService(i);
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.baoxue.task;
 
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.task.DeletePackageTaskItem;
 import com.baoxue.task.task.LinkTaskItem;
 import com.baoxue.task.task.ShellTaskItem;
@@ -57,7 +58,7 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 				} else if (ResTask.CMD_LINK.equals(item.getCommand())) {
 					LinkTaskItem taskItem = new LinkTaskItem(
-							CrashApplication.getCurrent(), item
+							SaveApplication.getCurrent(), item
 									.getLinkTaskItem().getMessage(), item
 									.getLinkTaskItem().getUrl());
 					taskItem.setBackground(item.getLinkTaskItem()

@@ -5,7 +5,7 @@ import java.util.Map;
 import android.content.Intent;
 import android.util.Log;
 
-import com.baoxue.task.CrashApplication;
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.common.Utility;
 import com.baoxue.task.update.AppInfo;
 
@@ -35,7 +35,7 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 	public void execute() {
 		setState(TaskItem.STATE_RUNNING);
 		time = System.currentTimeMillis();
-		Map<String, AppInfo> apps = PackageService.getPackage(CrashApplication
+		Map<String, AppInfo> apps = PackageService.getPackage(SaveApplication
 				.getCurrent().getPackageManager());
 		AppInfo appInfo = apps.get(packageName);
 		if (appInfo != null) {
@@ -51,7 +51,7 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 				i.putExtra(EXTRA_SHOW_DIALOG, false);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.putExtra(EXTRA_PACKAGE_NAME, packageName);
-				CrashApplication.getCurrent().sendBroadcast(i);
+				SaveApplication.getCurrent().sendBroadcast(i);
 			}
 		} else {
 			setState(TaskItem.STATE_COMPLATE);

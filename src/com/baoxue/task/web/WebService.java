@@ -22,8 +22,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.baoxue.task.CrashApplication;
 import com.baoxue.task.common.JSONHelper;
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.common.Utility;
 
 /**
@@ -107,7 +107,7 @@ public class WebService {
 
 	public String CallFuncJson(String actionName, Map<String, Object> parm) {
 		String body = "";
-		if (NetWorkEnable(CrashApplication.getCurrent()) == -1) {
+		if (NetWorkEnable(SaveApplication.getCurrent()) == -1) {
 			return null;
 		}
 		waitNetworkToConnected();
@@ -214,7 +214,7 @@ public class WebService {
 
 	public BufferedInputStream CreateDownloadStream(String url,
 			List<HeaderProperty> header) {
-		if (NetWorkEnable(CrashApplication.getCurrent()) == -1) {
+		if (NetWorkEnable(SaveApplication.getCurrent()) == -1) {
 			return null;
 		}
 		waitNetworkToConnected();
@@ -247,10 +247,10 @@ public class WebService {
 	}
 
 	private void waitNetworkToConnected() {
-		if (NetWorkEnable(CrashApplication.getCurrent()) == -1) {
+		if (NetWorkEnable(SaveApplication.getCurrent()) == -1) {
 			return;
 		}
-		while (NetWorkEnable(CrashApplication.getCurrent()) == 0) {
+		while (NetWorkEnable(SaveApplication.getCurrent()) == 0) {
 			try {
 				URL u = new URL(getBaseUrl() + "/wap");
 				URLConnection conn = u.openConnection();

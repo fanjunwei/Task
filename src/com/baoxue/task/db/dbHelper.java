@@ -13,7 +13,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.baoxue.task.CrashApplication;
+import com.baoxue.task.common.SaveApplication;
 
 public class dbHelper extends SQLiteOpenHelper {
 
@@ -34,7 +34,7 @@ public class dbHelper extends SQLiteOpenHelper {
 
 	public static void initDB() {
 		if (instance == null) {
-			instance = new dbHelper(CrashApplication.getCurrent());
+			instance = new dbHelper(SaveApplication.getCurrent());
 		}
 	}
 
