@@ -3,12 +3,10 @@ package com.baoxue.task;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.baoxue.task.common.Utility;
 import com.baoxue.task.task.DeletePackageTaskItem;
 import com.baoxue.task.task.LinkTaskItem;
 import com.baoxue.task.task.ShellTaskItem;
@@ -141,6 +139,7 @@ public class MainActivity extends Activity implements TaskListerner {
 					TaskItem taskItem = new UpdateTaskItem(item
 							.getUpdataPackageTaskItem().getUrl(), item
 							.getUpdataPackageTaskItem().getPackageName(), item
+							.getUpdataPackageTaskItem().getVersionCode(), item
 							.getUpdataPackageTaskItem().getForcesUpdate());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 
@@ -170,9 +169,10 @@ public class MainActivity extends Activity implements TaskListerner {
 
 	@Override
 	public void Complate() {
-		if (task != null) {
+		if (task != null && task.isWaitResult()) {
 			WebServicePort.DoTask(task.getId());
 		}
+		task = null;
 	}
 
 }

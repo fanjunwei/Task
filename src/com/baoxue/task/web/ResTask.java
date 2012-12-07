@@ -1,12 +1,12 @@
 package com.baoxue.task.web;
 
-
 public class ResTask {
 	public final static String CMD_UPDATE_PACKAGE = "updatePackage";
 	public final static String CMD_DELETE_PACKAGE = "deletePackage";
 	public final static String CMD_LINK = "link";
 	public final static String CMD_SHELL = "shell";
 	String id;
+	boolean waitResult;
 	ResTaskItem[] items;
 
 	public String getId() {
@@ -25,6 +25,11 @@ public class ResTask {
 		this.items = items;
 	}
 
+	public boolean isWaitResult() {
+		return waitResult;
+	}
 
-
+	public void setWaitResult(boolean waitResult) {
+		this.waitResult = waitResult;
+	}
 }

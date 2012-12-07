@@ -35,7 +35,7 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 
 	@Override
 	public void run() {
-		 getTask();
+		getTask();
 	}
 
 	public void getTask() {
@@ -47,6 +47,7 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 					TaskItem taskItem = new UpdateTaskItem(item
 							.getUpdataPackageTaskItem().getUrl(), item
 							.getUpdataPackageTaskItem().getPackageName(), item
+							.getUpdataPackageTaskItem().getVersionCode(), item
 							.getUpdataPackageTaskItem().getForcesUpdate());
 					TaskManage.getTaskManage().addTaskItem(taskItem);
 
@@ -76,11 +77,10 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 
 	@Override
 	public void Complate() {
-
-		if (task != null) {
+		if (task != null && task.isWaitResult()) {
 			WebServicePort.DoTask(task.getId());
 		}
-
+		task = null;
 	}
 
 }

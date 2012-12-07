@@ -133,7 +133,8 @@ public abstract class DownloadTaskItem extends TaskItem {
 
 	}
 
-	private void downloadProc() {
+	protected void downloadProc() {
+		setState(STATE_DOWNLOADING);
 		new Thread() {
 			public void run() {
 				newtime = System.currentTimeMillis();
@@ -398,7 +399,6 @@ public abstract class DownloadTaskItem extends TaskItem {
 
 	@Override
 	public void init() {
-		setState(STATE_DOWNLOADING);
 		downloadProc();
 	}
 }

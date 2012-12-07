@@ -11,7 +11,7 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d("Task", "boot");
+		Log.d("Task", "boot action=" + intent.getAction());
 		Utility.setAlarm(context, 60 * 1000);
 	}
 

@@ -6,7 +6,6 @@ import java.util.Queue;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.SparseArray;
 
 import com.baoxue.task.common.LinkedItem;
 import com.baoxue.task.db.dbHelper;
@@ -19,7 +18,7 @@ public class TaskManage {
 	LinkedItem taskDoingListHeader = new TaskItemHeader();
 	Queue<TaskItem> taskQueue = new LinkedList<TaskItem>();
 	Queue<Intent> broadcast = new LinkedList<Intent>();
-	SparseArray<TaskItem> datamap = new SparseArray<TaskItem>();
+
 	int downloadCount = 0;
 	final static int MAX_DOWNLOAD_COONT = 3;
 	Thread taskThread = null;
@@ -70,13 +69,8 @@ public class TaskManage {
 
 	public synchronized int addTaskItem(TaskItem taskItem) {
 		if (taskThread == null) {
-			if (datamap.get(taskItem.getId()) != null) {
-				return 1;
-			} else {
-				taskQueue.add(taskItem);
-				datamap.put(taskItem.getId(), taskItem);
-				return 0;
-			}
+			taskQueue.add(taskItem);
+			return 0;
 		} else {
 			return -1;
 		}
@@ -105,7 +99,6 @@ public class TaskManage {
 				case TaskItem.STATE_ERROR:
 				case TaskItem.STATE_COMPLATE:
 				case TaskItem.STATE_CANCEL:
-					datamap.remove(item.getId());
 					item.remove();
 					break;
 

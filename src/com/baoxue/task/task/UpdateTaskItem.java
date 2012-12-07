@@ -21,13 +21,29 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 	private final String TAG = "UpdateTaskItem:" + this.hashCode();
 	private String packageName;
 	private boolean forcesUpdate;
+	private int versionCode;
 	private long time;
 
-	public UpdateTaskItem(String url, String packageName, boolean forcesUpdate) {
+	public UpdateTaskItem(String url, String packageName, int versionCode,
+			boolean forcesUpdate) {
 		super(url, packageName + ".apk");
 		this.packageName = packageName;
 		this.forcesUpdate = forcesUpdate;
+		this.versionCode = versionCode;
 
+	}
+
+	@Override
+	public void init() {
+		Map<String, AppInfo> packages = PackageService
+				.getPackage(CrashApplication.getCurrent().getPackageManager());
+		AppInfo info = packages.get(packageName);
+		if (info != null && info.getVersionCode() >= versionCode) {
+			setState(TaskItem.STATE_COMPLATE);
+			return;
+		} else {
+			downloadProc();
+		}
 	}
 
 	public String getPackageName() {
@@ -58,22 +74,26 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 					Log.d(TAG, "execute:run");
 
 					if (forcesUpdate) {
+						String newPath = null;
 						Map<String, AppInfo> apps = PackageService
 								.getPackage(CrashApplication.getCurrent()
 										.getPackageManager());
 						AppInfo ai = apps.get(packageName);
+
+						String ss1 = Utility.runCommand("ps");
+						Log.d(TAG, ss1);
 						if (ai != null) {
-							String cmd = String.format("mv %s %s",
+							String cmd = String.format("cp %s %s",
 									getFilePath(), ai.getApkPath());
-							Utility.runCommand(cmd);
+							String ss = Utility.runCommand(cmd);
+							Log.d(TAG, ss);
 						} else {
-							String cmd = String.format("mv %s %s",
+							String cmd = String.format("cp %s %s",
 									getFilePath(), "/system/app/" + packageName
 											+ ".apk");
-							Utility.runCommand(cmd);
+							String ss = Utility.runCommand(cmd);
+							Log.d(TAG, ss);
 						}
-						File file = new File(getFilePath());
-						file.deleteOnExit();
 					} else {
 						Intent i = new Intent(ACTION_INSTALL);
 						i.putExtra(EXTRA_SHOW_DIALOG, false);
@@ -128,6 +148,8 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 
 	private void deleteFile() {
 		File f = new File(getFilePath());
-		f.deleteOnExit();
+		if (f.exists()) {
+			f.delete();
+		}
 	}
 }

@@ -186,18 +186,24 @@ public class Utility {
 		return id;
 	}
 
-	public static void setAlarm(Context context, long intervalMillis) {
+	private static PendingIntent alarmpi = null;
 
-		PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(
-				context, Receiver.class), 0);
+	public static void setAlarm(Context context, long intervalMillis) {
 
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
+		if (alarmpi != null) {
+			am.cancel(alarmpi);
+			alarmpi = null;
+		}
+		alarmpi = PendingIntent.getBroadcast(context, 0, new Intent(context,
+				Receiver.class), 0);
 
 		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()
-				+ intervalMillis, intervalMillis, pi);
+				+ intervalMillis, intervalMillis, alarmpi);
 
 	}
+
 	public static void openUrl(String url) {
 		Intent intent = new Intent();
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
