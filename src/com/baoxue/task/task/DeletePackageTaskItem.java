@@ -21,8 +21,9 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 	private long time;
 	private final String TAG = "DeletePackageTaskItem:" + this.hashCode();
 
-	public DeletePackageTaskItem(String packageName) {
-		this.packageName=packageName;
+	public DeletePackageTaskItem(String id, String packageName) {
+		super(id);
+		this.packageName = packageName;
 
 	}
 
@@ -68,15 +69,9 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 		if (getState() == TaskItem.STATE_RUNNING) {
 			if ((System.currentTimeMillis() - time) > 60000) {
 				Log.d(TAG, "timeOut");
-				setState(TaskItem.STATE_COMPLATE);
+				setState(TaskItem.STATE_TIMEOUT);
 			}
 		}
-	}
-
-	@Override
-	public int getId() {
-		String str = "delete" + packageName;
-		return str.hashCode();
 	}
 
 	@Override
@@ -90,6 +85,11 @@ public class DeletePackageTaskItem extends TaskItem implements PackageItem {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String getDescription() {
+		return "deletepackage:packageName="+packageName;
 	}
 
 }

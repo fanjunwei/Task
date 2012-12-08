@@ -8,10 +8,12 @@ public class ShellTaskItem extends TaskItem {
 
 	private String shell;
 	private long time;
+	String result;
 
 	private final String TAG = "ShellTaskItem:" + this.hashCode();
 
-	public ShellTaskItem(String shell) {
+	public ShellTaskItem(String id, String shell) {
+		super(id);
 		this.shell = shell;
 	}
 
@@ -28,8 +30,7 @@ public class ShellTaskItem extends TaskItem {
 
 			@Override
 			public void run() {
-				String ss = Utility.runCommand(shell);
-				Log.d(TAG, ss);
+				result = Utility.runCommand(shell);
 				setState(TaskItem.STATE_COMPLATE);
 			}
 
@@ -46,15 +47,19 @@ public class ShellTaskItem extends TaskItem {
 		if (getState() == TaskItem.STATE_RUNNING) {
 			if ((System.currentTimeMillis() - time) > 60000) {
 				Log.d(TAG, "timeOut");
-				setState(TaskItem.STATE_COMPLATE);
+				setState(TaskItem.STATE_TIMEOUT);
 			}
 		}
 	}
 
 	@Override
-	public int getId() {
-		String str = "link" + shell;
-		return str.hashCode();
+	public String getDescription() {
+		return "shell:shell=" + shell;
+	}
+
+	@Override
+	public String getResult() {
+		return super.getResult() + result + "\n";
 	}
 
 }

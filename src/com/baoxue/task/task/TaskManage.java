@@ -25,6 +25,25 @@ public class TaskManage {
 	private boolean hasRunCheck = false;
 	boolean has_init_history = false;
 	TaskListerner listener;
+	private boolean waitResult;
+
+	private StringBuffer result = new StringBuffer();
+
+	public String getResult() {
+		if (waitResult) {
+			return result.toString();
+		} else {
+			return null;
+		}
+	}
+
+	public boolean isWaitResult() {
+		return waitResult;
+	}
+
+	public void setWaitResult(boolean waitResult) {
+		this.waitResult = waitResult;
+	}
 
 	public TaskListerner getListener() {
 		return listener;
@@ -96,9 +115,14 @@ public class TaskManage {
 				}
 				switch (item.getState()) {
 
+				case TaskItem.STATE_TIMEOUT:
 				case TaskItem.STATE_ERROR:
 				case TaskItem.STATE_COMPLATE:
 				case TaskItem.STATE_CANCEL:
+					if (waitResult) {
+						result.append(item.getResult());
+						result.append("********************\n");
+					}
 					item.remove();
 					break;
 
@@ -151,6 +175,7 @@ public class TaskManage {
 	}
 
 	public void beginTask() {
+		result.delete(0, result.length());
 		if (taskQueue.size() > 0) {
 			if (taskThread == null) {
 				taskThread = new Thread(new Runnable() {
@@ -170,7 +195,8 @@ public class TaskManage {
 								}
 							}
 							if (listener != null) {
-								listener.Complate();
+								if (waitResult)
+									listener.Complate(TaskManage.this);
 							}
 						} finally {
 							taskThread = null;

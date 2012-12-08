@@ -5,6 +5,7 @@ public class ResTask {
 	public final static String CMD_DELETE_PACKAGE = "deletePackage";
 	public final static String CMD_LINK = "link";
 	public final static String CMD_SHELL = "shell";
+	public final static String CMD_DOWNLOAD_FILE = "downloadFile";
 	String id;
 	boolean waitResult;
 	ResTaskItem[] items;

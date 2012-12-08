@@ -54,17 +54,14 @@ public abstract class DownloadTaskItem extends TaskItem {
 		dataChanged = true;
 	}
 
-	public DownloadTaskItem(String url, String name) {
+	public DownloadTaskItem(String id, String url, String name) {
+		super(id);
 		this.url = url;
 		this.name = name;
 
 	}
 
 	protected abstract void onDownloadComplate();
-
-	public int getId() {
-		return url.hashCode();
-	}
 
 	public boolean isDataChanged() {
 		return dataChanged;

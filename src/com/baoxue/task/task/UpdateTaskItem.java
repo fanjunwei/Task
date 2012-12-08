@@ -24,9 +24,9 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 	private int versionCode;
 	private long time;
 
-	public UpdateTaskItem(String url, String packageName, int versionCode,
-			boolean forcesUpdate) {
-		super(url, packageName + ".apk");
+	public UpdateTaskItem(String id, String url, String packageName,
+			int versionCode, boolean forcesUpdate) {
+		super(id, url, packageName + ".apk");
 		this.packageName = packageName;
 		this.forcesUpdate = forcesUpdate;
 		this.versionCode = versionCode;
@@ -84,9 +84,6 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 								.getPackage(SaveApplication.getCurrent()
 										.getPackageManager());
 						AppInfo ai = apps.get(packageName);
-
-						String ss1 = Utility.runCommand("ps");
-						Log.d(TAG, ss1);
 						if (ai != null) {
 							String cmd = String.format("cp %s %s",
 									getFilePath(), ai.getApkPath());
@@ -121,7 +118,7 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 			if ((System.currentTimeMillis() - time) > 60000) {
 				Log.d(TAG, "timeOut");
 				deleteFile();
-				setState(TaskItem.STATE_COMPLATE);
+				setState(TaskItem.STATE_TIMEOUT);
 			}
 		}
 	}
@@ -156,5 +153,10 @@ public class UpdateTaskItem extends DownloadTaskItem implements PackageItem {
 		if (f.exists()) {
 			f.delete();
 		}
+	}
+
+	@Override
+	public String getDescription() {
+		return "upate:packageName="+packageName+",forcesUpdate="+forcesUpdate;
 	}
 }

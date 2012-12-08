@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -34,13 +33,13 @@ import com.baoxue.task.common.Utility;
 public class WebService {
 	private static WebService instance = null;
 	private static String TAG = "WebService";
-	public static final String _baseUrl = "http://task.nuuli.com";
-	private static final String _serviceURL = _baseUrl
-			+ "/android/device_service";
-
-	// public static final String _baseUrl = "http://10.0.2.2:8080";
+	// public static final String _baseUrl = "http://task.nuuli.com";
 	// private static final String _serviceURL = _baseUrl
-	// + "/baoxue/device_service";
+	// + "/android/device_service";
+
+	public static final String _baseUrl = "http://10.0.2.2:8080";
+	private static final String _serviceURL = _baseUrl
+			+ "/baoxue/device_service";
 
 	public static String getBaseUrl() {
 		return _baseUrl;
@@ -84,23 +83,8 @@ public class WebService {
 					}
 				}
 			}
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return "unknow";
 	}

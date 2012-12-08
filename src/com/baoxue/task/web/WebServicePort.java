@@ -1,10 +1,12 @@
 package com.baoxue.task.web;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.baoxue.task.common.JSONHelper;
+import com.baoxue.task.common.Zip;
 import com.baoxue.task.update.UpdateInfo;
 
 public class WebServicePort {
@@ -30,18 +32,23 @@ public class WebServicePort {
 
 	}
 
-	public static ResTask DoTask(String taskId) {
+	public static ResTask DoTask(String taskId, String result) {
 
 		if (taskId != null && !"".equals(taskId)) {
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("taskId", taskId);
-			String res = WebService.getInstance().CallFuncJson("do_task",
-					parameters);
-			ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
-			return taskItems;
-		} else {
-			return null;
-		}
+			try {
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("taskId", taskId);
 
+				parameters.put("resultZipBase64",
+						Zip.zipBase64compress(result.getBytes("utf-8")));
+
+				String res = WebService.getInstance().CallFuncJson("do_task",
+						parameters);
+				ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
+				return taskItems;
+			} catch (UnsupportedEncodingException e) {
+			}
+		}
+		return null;
 	}
 }

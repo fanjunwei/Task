@@ -2,10 +2,12 @@ package com.baoxue.task.web;
 
 public class ResTaskItem {
 	private String command;
-	private ResDeletePackageTaskItem deletePackageTaskItem = new ResDeletePackageTaskItem();
-	private ResUpdataPackageTaskItem updataPackageTaskItem = new ResUpdataPackageTaskItem();
-	private ResLinkTaskItem linkTaskItem = new ResLinkTaskItem();
-	private ResShellPackageTaskItem shellTaskItem;
+	private String id;
+	private ResDeletePackageTaskItem deletePackageTaskItem;
+	private ResUpdataPackageTaskItem updataPackageTaskItem;
+	private ResLinkTaskItem linkTaskItem;
+	private ResShellTaskItem shellTaskItem;
+	private ResDownloadFileTaskItem downloadFileItem;
 
 	public String getCommand() {
 		return command;
@@ -41,12 +43,28 @@ public class ResTaskItem {
 		this.linkTaskItem = linkTaskItem;
 	}
 
-	public ResShellPackageTaskItem getShellTaskItem() {
+	public ResShellTaskItem getShellTaskItem() {
 		return shellTaskItem;
 	}
 
-	public void setShellTaskItem(ResShellPackageTaskItem shellTaskItem) {
+	public void setShellTaskItem(ResShellTaskItem shellTaskItem) {
 		this.shellTaskItem = shellTaskItem;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public ResDownloadFileTaskItem getDownloadFileItem() {
+		return downloadFileItem;
+	}
+
+	public void setDownloadFileItem(ResDownloadFileTaskItem downloadFileItem) {
+		this.downloadFileItem = downloadFileItem;
 	}
 
 }
