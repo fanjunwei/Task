@@ -197,7 +197,7 @@ public class Utility {
 		}
 		alarmpi = PendingIntent.getBroadcast(context, 0, new Intent(context,
 				Receiver.class), 0);
-
+		am.cancel(alarmpi);
 		am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()
 				+ intervalMillis, intervalMillis, alarmpi);
 

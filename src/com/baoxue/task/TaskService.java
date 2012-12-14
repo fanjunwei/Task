@@ -37,7 +37,7 @@ public class TaskService extends Service implements Runnable, TaskListerner {
 
 	@Override
 	public void run() {
-		getTask();
+		//getTask();
 	}
 
 	public void getTask() {

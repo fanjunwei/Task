@@ -15,6 +15,7 @@ public class storeHelper {
 	final private static String cachePath = "/task/.cache";
 
 	public static String getStoreDir() {
+		createDataDir();
 		return getSDCardPath() + dataPath;
 	}
 

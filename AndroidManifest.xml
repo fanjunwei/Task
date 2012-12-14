@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto"
     package="com.baoxue.task"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="8" />
 
     <uses-permission android:name="baoxue.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="baoxue.permission.DELETE_PACKAGES" />

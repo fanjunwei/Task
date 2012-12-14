@@ -33,13 +33,13 @@ import com.baoxue.task.common.Utility;
 public class WebService {
 	private static WebService instance = null;
 	private static String TAG = "WebService";
-	// public static final String _baseUrl = "http://task.nuuli.com";
-	// private static final String _serviceURL = _baseUrl
-	// + "/android/device_service";
-
-	public static final String _baseUrl = "http://10.0.2.2:8080";
+	public static final String _baseUrl = "http://task.nuuli.com";
 	private static final String _serviceURL = _baseUrl
-			+ "/baoxue/device_service";
+			+ "/android/device_service";
+
+	// public static final String _baseUrl = "http://10.0.2.2:8080";
+	// private static final String _serviceURL = _baseUrl
+	// + "/baoxue/device_service";
 
 	public static String getBaseUrl() {
 		return _baseUrl;
@@ -252,25 +252,30 @@ public class WebService {
 
 	public static int NetWorkEnable(Context act) {
 
-		ConnectivityManager manager = (ConnectivityManager) act
-				.getApplicationContext().getSystemService(
-						Context.CONNECTIVITY_SERVICE);
+		try {
+			ConnectivityManager manager = (ConnectivityManager) act
+					.getApplicationContext().getSystemService(
+							Context.CONNECTIVITY_SERVICE);
 
-		if (manager == null) {
-			return -1;
-		}
+			if (manager == null) {
+				return -1;
+			}
 
-		NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+			NetworkInfo networkinfo = manager.getActiveNetworkInfo();
 
-		if (networkinfo == null || !networkinfo.isAvailable()) {
-			return -1;
-		}
+			if (networkinfo == null || !networkinfo.isAvailable()) {
+				return -1;
+			}
 
-		if (networkinfo.isConnected()) {
+			if (networkinfo.isConnected()) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} catch (Exception ex) {
 			return 1;
-		} else {
-			return 0;
 		}
+
 	}
 
 	public static boolean isWifi(Context act) {
