@@ -8,10 +8,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.baoxue.task.common.LinkedItem;
+import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.db.dbHelper;
 
 public class TaskManage {
 
+	private boolean hasChangePackage = false;
 	private static TaskManage instance = null;
 	public static final String DATA_TABLE_NAME = "download_list";
 	private boolean cancelAllTaskFlag = false;
@@ -31,6 +33,11 @@ public class TaskManage {
 
 	public String getResult() {
 		if (waitResult) {
+			if (hasChangePackage) {
+				hasChangePackage = false;
+				result.append(PackageService.getStr(SaveApplication
+						.getCurrent().getPackageManager()));
+			}
 			return result.toString();
 		} else {
 			return null;
@@ -123,6 +130,9 @@ public class TaskManage {
 						result.append(item.getResult());
 						result.append("********************\n");
 					}
+					if (item instanceof PackageItem) {
+						hasChangePackage = true;
+					}
 					item.remove();
 					break;
 
@@ -183,6 +193,7 @@ public class TaskManage {
 					@Override
 					public void run() {
 						try {
+							hasChangePackage = false;
 							while (taskDoingListHeader.getNext() != null
 									|| taskQueue.size() > 0) {
 								if (!hasRunCheck) {
