@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.baoxue.task.common.JSONHelper;
+import com.alibaba.fastjson.JSON;
 import com.baoxue.task.common.Zip;
 import com.baoxue.task.update.UpdateInfo;
 
@@ -19,7 +19,7 @@ public class WebServicePort {
 		parameters.put("versionCodes", versionCodes);
 		String res = WebService.getInstance()
 				.CallFuncJson("updata", parameters);
-		UpdateInfo updateinfo = JSONHelper.parseObject(res, UpdateInfo.class);
+		UpdateInfo updateinfo = JSON.parseObject(res, UpdateInfo.class);
 		return updateinfo;
 
 	}
@@ -27,7 +27,7 @@ public class WebServicePort {
 	public static ResTask Task() {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		String res = WebService.getInstance().CallFuncJson("task", parameters);
-		ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
+		ResTask taskItems = JSON.parseObject(res, ResTask.class);
 		return taskItems;
 
 	}
@@ -44,7 +44,7 @@ public class WebServicePort {
 
 				String res = WebService.getInstance().CallFuncJson("do_task",
 						parameters);
-				ResTask taskItems = JSONHelper.parseObject(res, ResTask.class);
+				ResTask taskItems = JSON.parseObject(res, ResTask.class);
 				return taskItems;
 			} catch (UnsupportedEncodingException e) {
 			}

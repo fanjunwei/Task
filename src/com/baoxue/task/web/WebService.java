@@ -21,7 +21,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.baoxue.task.common.JSONHelper;
+import com.alibaba.fastjson.JSON;
 import com.baoxue.task.common.SaveApplication;
 import com.baoxue.task.common.Utility;
 
@@ -102,7 +102,7 @@ public class WebService {
 			// SystemProperties
 			// .get("ro.custom.build.version", "unknown");
 			if (parm != null) {
-				body = JSONHelper.toJSON(parm);
+				body = JSON.toJSONString(parm);
 			}
 			URL u = new URL(url);
 			HttpURLConnection conn = null;

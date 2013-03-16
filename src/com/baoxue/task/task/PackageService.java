@@ -8,7 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.baoxue.task.common.JSONHelper;
+import com.alibaba.fastjson.JSON;
+
 import com.baoxue.task.update.AppInfo;
 
 public class PackageService {
@@ -39,7 +40,7 @@ public class PackageService {
 				ai.setDataDir(applicationInfo.dataDir);
 				ai.setApkPath(applicationInfo.publicSourceDir);
 				ai.setUid(applicationInfo.uid);
-				appsb.append(JSONHelper.toJSON(ai) + "\n");
+				appsb.append(JSON.toJSONString(ai) + "\n");
 				apps.put(packageInfo.packageName, ai);
 				if ((applicationInfo.flags | ApplicationInfo.FLAG_SYSTEM) != 0) {
 					ai.setSystemApp(true);
